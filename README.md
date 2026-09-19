@@ -6,6 +6,29 @@
 
 ---
 
+## 本仓库包含什么
+
+**本仓库不包含 OCTOP 的源代码**，只有重新打包所需的脚本与文档：
+
+| 文件 | 说明 |
+|---|---|
+| `build.sh` | 打包脚本 —— 本仓库的核心产出 |
+| `README.md` / `NOTICE` / `LICENSE` | 说明、署名与许可 |
+| `.gitignore` / `.gitattributes` | 忽略 `dist/`、统一换行为 LF |
+
+源代码在**构建时自动获取**，`build.sh` 会：
+
+1. `git clone --depth 1 https://github.com/TencentCloud/Octop.git`
+   —— 取上游的 `fnos/native` 打包模板与打包脚本
+2. `pip download octop==<版本>`
+   —— 从 PyPI 下载 OCTOP 发行包（即 OCTOP 本体代码）
+
+本项目**未修改任何 OCTOP 源代码**，只调整了打包方式（详见 [NOTICE](NOTICE) 的「相对于上游的修改」）。也正因为如此，上游发新版本时无需手动同步源码，执行 `OCTOP_VERSION=<新版本> ./build.sh` 即可跟随。
+
+> 💡 **想直接看代码？** 下载 [Releases](../../releases) 里的 FPK，解包后 `app/site-packages/` 下就是完整的 OCTOP 安装包。
+
+---
+
 ## 为什么需要这个包
 
 官方 fnOS 原生包的 manifest 声明 `platform = all`（全架构通用），但是在 fnOS ARM64 设备上表现为：
@@ -78,8 +101,8 @@ echo '/vol1/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
 ### 构建
 
 ```bash
-git clone https://github.com/<你的用户名>/octop-native-arm64.git
-cd octop-native-arm64
+git clone https://github.com/<你的用户名>/Octop-FnOS-arm64.git
+cd Octop-FnOS-arm64
 
 # 构建指定版本（默认 1.0.1）
 OCTOP_VERSION=1.0.1 ./build.sh
