@@ -1,0 +1,7 @@
+# 统一换行符:仓库内一律 LF
+# 关键:build.sh 是给 Linux/WSL 运行的,若被检出为 CRLF 会报 bad interpreter
+* text=auto eol=lf
+*.sh text eol=lf
+*.md text eol=lf
+*.fpk binary
+*.whl binary
