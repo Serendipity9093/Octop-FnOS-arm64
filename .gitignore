@@ -1,0 +1,8 @@
+# 构建工作区(体积大,可随时重建)
+.build/
+dist/
+
+# 编辑器/系统
+.DS_Store
+Thumbs.db
+*.swp

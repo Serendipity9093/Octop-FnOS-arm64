@@ -1,0 +1,48 @@
+NOTICE
+======
+
+本仓库（octop-native-arm64）不是 OCTOP 官方项目。
+
+上游项目
+--------
+  OCTOP — 多用户多智能体 AI 助手平台
+  https://github.com/TencentCloud/Octop
+  维护者:TencentCloud OrcaKit
+  许可:MIT License (Copyright (c) 2026 Octop)
+
+本仓库的性质
+------------
+本仓库只包含**打包脚本与文档**,不包含 OCTOP 源代码本身。
+构建时从上游仓库克隆源代码,从 PyPI 获取 `octop` 发行包及其依赖,
+重新打包为适用于 **ARM64(aarch64)飞牛 fnOS** 的原生安装包(.fpk)。
+
+相对于上游的修改
+----------------
+仅在打包环节做了以下调整,未修改任何 OCTOP 源代码:
+
+1. 依赖交叉安装到 aarch64
+   上游 CI 在 x86_64 运行器上执行 `uv pip install`,导致包内二进制为 x86_64。
+   本项目改用 `uv pip install --python-platform aarch64-unknown-linux-gnu`
+   交叉安装 aarch64 依赖。
+
+2. manifest 的 platform 字段
+   上游为 `platform = all`(与实际 x86_64 载荷不符);
+   本项目改为 `platform = arm`。
+
+3. 三个依赖的本地构建
+   `oss2`、`esdk-obs-python`(纯 Python)在构建机上生成通用 wheel;
+   `crcmod`(含 C 扩展但有纯 Python 回退)以 `CC=/bin/false` 触发回退构建。
+
+4. 排除 `evdev`
+   该包无 aarch64 构建产物,且仅被 `pynput` 用于桌面控制功能
+   (无头 NAS 无实际用途,OCTOP 对其为惰性导入)。
+
+商标
+----
+"OCTOP" 及相关名称、标识归其权利人所有。
+本项目在描述性、指明来源的意义上使用该名称,不代表官方背书或关联。
+
+许可
+----
+本项目遵循 MIT 许可,见 LICENSE。
+OCTOP 源代码的版权归原作者所有。
