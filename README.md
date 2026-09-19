@@ -6,42 +6,6 @@
 
 ---
 
-## 为什么需要这个包
-
-官方 fnOS 原生包的 manifest 声明 `platform = all`（全架构通用），**但包内的二进制依赖全部是 x86_64 编译产物**，因此在 ARM64 设备上表现为：
-
-- ✅ 安装成功、向导正常完成
-- ❌ **应用无法启动**，日志报错：
-
-```
-ImportError: .../_argon2_cffi_bindings/_ffi.abi3.so:
-             cannot open shared object file: No such file or directory
-[octop-native] 错误：管理员账号初始化失败
-```
-
-### 根本原因
-
-官方构建流程（`.github/workflows/fnos-build-fpk.yml`）在 **`runs-on: ubuntu-latest`（x86_64）** 运行器上执行：
-
-```bash
-uv pip install --target .../fnos/native/app/site-packages <octop wheel>
-```
-
-`pip/uv` 默认安装**当前平台**的 wheel，于是在 x86_64 上产出的 `site-packages` 全是 x86_64 二进制，却被声明为 `platform = all`。
-
-实测证据（官方 1.0.0 包）：
-
-| 检查项 | 官方包 | 本包 |
-|---|---|---|
-| manifest 声明 | `platform = all` | `platform = arm` |
-| x86_64 二进制扩展 | **77 个** | **0 个** |
-| AArch64 二进制扩展 | **0 个** | **119 个** |
-| 安装后启动 | ❌ 崩溃 | ✅ 一次成功 |
-
-（ELF 机器码 `0x3E` = x86-64，`0xB7` = AArch64）
-
----
-
 ## 使用方法
 
 ### 1. 下载
